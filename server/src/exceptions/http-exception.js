@@ -1,9 +1,8 @@
-class HttpException extends Error {
-    constructor(status, message) {
+export default class HttpException extends Error {
+    constructor(statusCode, message) {
         super(message);
-        this.status = status;
-        this.message = message;
+        this.statusCode = statusCode;
+        this.isOperational = true;
+        Error.captureStackTrace(this, this.constructor);
     }
 }
-
-export default HttpException;
