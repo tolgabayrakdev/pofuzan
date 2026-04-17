@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/components/theme/theme-provider"
 
 export default function Settings() {
   const [isLoading, setIsLoading] = useState(false)
-  const [theme, setTheme] = useState<"light" | "dark" | "system">("system")
+  const { theme, setTheme } = useTheme()
 
   const handleSave = () => {
     setIsLoading(true)
@@ -93,10 +94,10 @@ export default function Settings() {
                 <p className="text-xs">Monospace Font</p>
                 <p className="text-[10px] text-muted-foreground">JetBrains Mono</p>
               </div>
-              <label className="relative inline-flex cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-9 h-5 bg-input peer-focus:ring-1 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-background after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-foreground" />
-              </label>
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full" />
+                <span className="text-[10px]">Aktif</span>
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -139,6 +140,54 @@ export default function Settings() {
               <Button variant="outline" size="sm" className="text-[10px] uppercase tracking-wider">
                 Etkinleştir
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xs uppercase tracking-wider">Gizlilik</CardTitle>
+            <CardDescription className="text-[10px]">
+              Veri işleme ve gizlilik politikası
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-3 bg-muted/50 rounded-md text-[10px] space-y-2">
+              <p className="font-medium uppercase">Kişisel Verilerin İşlenmesi</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Bu sistemde kayıt altına alınan tüm kişi ve işlem verileri, yalnızca sistem
+                güvenliği ve denetim amaçlı işlenir. Kişisel bilgiler (ad, TC kimlik no, adres,
+                iletişim bilgileri) veritabanında şifrelenmiş olarak saklanır ve üçüncü taraflarla
+                paylaşılmaz.
+              </p>
+            </div>
+
+            <div className="p-3 bg-muted/50 rounded-md text-[10px] space-y-2">
+              <p className="font-medium uppercase">İşlem Geçmişi</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Tüm kullanıcı işlemleri (kayıt ekleme, güncelleme, silme, görüntüleme) tarih,
+                saat ve kullanıcı bilgisiyle birlikte loglanır. Bu kayıtlar denetim amaçlı
+                tutulur ve silinemez.
+              </p>
+            </div>
+
+            <div className="p-3 bg-muted/50 rounded-md text-[10px] space-y-2">
+              <p className="font-medium uppercase">Veri Güvenliği</p>
+              <p className="text-muted-foreground leading-relaxed">
+                Veriler, endüstri standardı şifreleme protokolleri ile korunmaktadır. Yetkisiz
+                erişim attemptleri sistem tarafından loglanır ve engellenir.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-border">
+              <div>
+                <p className="text-xs">KVKK Uyumu</p>
+                <p className="text-[10px] text-muted-foreground">6698 sayılı KVKK kapsamında</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full" />
+                <span className="text-[10px]">Aktif</span>
+              </div>
             </div>
           </CardContent>
         </Card>

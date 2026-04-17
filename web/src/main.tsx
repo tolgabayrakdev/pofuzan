@@ -4,9 +4,11 @@ import './index.css'
 import { createBrowserRouter } from 'react-router'
 import { RouterProvider } from 'react-router'
 import { Toaster } from 'sonner'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 import SignIn from '@/pages/auth/sign-in'
 import SignUp from '@/pages/auth/sign-up'
+import Privacy from '@/pages/privacy'
 import Dashboard from '@/pages/app/index'
 import Records from '@/pages/app/records'
 import NewPerson from '@/pages/app/person/new'
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-up",
     element: <SignUp />
+  },
+  {
+    path: "/privacy",
+    element: <Privacy />
   },
   {
     path: "/app",
@@ -49,7 +55,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Toaster />
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <Toaster />
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>,
 )
