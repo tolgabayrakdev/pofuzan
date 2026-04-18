@@ -1,17 +1,18 @@
 import HttpException from "../exceptions/http-exception.js";
+import logger from "../util/logger.js";
 
-export default function errorHandler(err, _req, res, _next) {
+export default function errorHandler(err, req, res, _next) {
     if (err instanceof HttpException) {
+        logger.warn({ err, req: req.raw }, "Validation error");
         return res.status(err.statusCode).json({
             status: "error",
             statusCode: err.statusCode,
-            message: err.message
+            message: err.message,
+            errors: err.errors || null
         });
     }
 
-    if (process.env.NODE_ENV !== "production") {
-        console.error("Unhandled Error:", err);
-    }
+    logger.error({ err, req: req.raw }, "Unhandled error");
 
     const statusCode = err.statusCode || 500;
     const message = process.env.NODE_ENV === "production"
