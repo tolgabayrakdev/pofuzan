@@ -20,10 +20,8 @@ async function testConnection() {
         const client = await pool.connect();
         console.log("✅ Database connection successful");
         client.release();
-        return true;
     } catch (error) {
-        console.error("❌ Database connection failed:", error.message);
-        process.exit(1);
+        console.error("⚠️ Database connection failed, server will run without database:", error.message);
     }
 }
 
