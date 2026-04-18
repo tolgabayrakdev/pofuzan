@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +15,7 @@ export default function SignUp() {
     confirmPassword: "",
   })
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
       return
