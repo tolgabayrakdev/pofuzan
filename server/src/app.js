@@ -9,6 +9,7 @@ const envFile = process.env.NODE_ENV === "production" ? ".env" : ".env.developme
 dotenv.config({ path: path.resolve(envFile) });
 
 import errorHandler from "./middleware/error-handler.js";
+import { generalLimiter } from "./middleware/rate-limiter.js";
 import authRoutes from "./routes/auth.routes.js";
 import personsRoutes from "./routes/persons.routes.js";
 
@@ -22,6 +23,7 @@ app.use(cors({
 }));
 app.use(helmet());
 app.use(morgan("common"));
+app.use(generalLimiter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/persons", personsRoutes);

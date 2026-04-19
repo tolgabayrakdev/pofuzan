@@ -1,13 +1,24 @@
 -- Users Table (Admin ve User rolleri)
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'user')),
     access_lvl INTEGER DEFAULT 1 CHECK (access_lvl IN (1, 2, 3)),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Registration Codes Table
+CREATE TABLE registration_codes (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    code_type VARCHAR(20) NOT NULL CHECK (code_type IN ('lvl1', 'lvl2', 'lvl3')),
+    is_active BOOLEAN DEFAULT TRUE,
+    used_count INTEGER DEFAULT 0,
+    max_uses INTEGER DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP
 );
 
 -- Kişiler (Persons) Tablosu - Ana tablo
@@ -238,6 +249,16 @@ CREATE INDEX idx_sessions_active ON sessions(is_active);
 -- Seed Data (Test Users)
 -- Admin: admin@pofuzan.com / admin123 (lvl3)
 -- User: user@pofuzan.com / user123 (lvl1)
-INSERT INTO users (username, email, password, role, access_lvl) VALUES
-('admin', 'admin@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'admin', 3),
-('user', 'user@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'user', 1);
+INSERT INTO users (email, password, role, access_lvl) VALUES
+('admin@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'admin', 3),
+('user@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'user', 1);
+
+-- Seed Registration Codes
+INSERT INTO registration_codes (code, code_type, max_uses) VALUES
+('LVL1-2024', 'lvl1', 100),
+('LVL1-DEMO', 'lvl1', 10),
+('LVL1-TEST', 'lvl1', 5),
+('LVL2-2024', 'lvl2', 50),
+('LVL2-ADMIN', 'lvl2', 20),
+('LVL3-2024', 'lvl3', 10),
+('LVL3-MASTER', 'lvl3', 3);

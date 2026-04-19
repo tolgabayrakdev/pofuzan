@@ -12,8 +12,8 @@ function getDeviceInfo(req) {
 class AuthController {
     async register(req, res, next) {
         try {
-            const { username, email, password, role, access_lvl } = req.body;
-            const result = await authService.register({ username, email, password, role, access_lvl });
+            const { email, password, registration_code } = req.body;
+            const result = await authService.register({ email, password, registration_code });
             res.status(201).json(result);
         } catch (error) {
             next(error);
@@ -38,7 +38,8 @@ class AuthController {
     async logout(req, res, next) {
         try {
             const sessionId = req.user.session_id;
-            const result = await authService.logout(sessionId);
+            const accessToken = req.headers.authorization?.split(" ")[1];
+            const result = await authService.logout(sessionId, accessToken);
             res.json(result);
         } catch (error) {
             next(error);

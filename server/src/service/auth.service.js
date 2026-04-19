@@ -1,12 +1,17 @@
 import authRepository from "../repository/auth.repository.js";
 import sessionRepository from "../repository/session.repository.js";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../util/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken, decodeToken } from "../util/jwt.js";
+import { addToBlacklist } from "../util/token-blacklist.js";
 import HttpException from "../exceptions/http-exception.js";
 import logger from "../util/logger.js";
 
 class AuthService {
     async register(userData) {
-        const { username, email, password, role, access_lvl } = userData;
+        const { email, password, registration_code } = userData;
+
+        if (!registration_code) {
+            throw new HttpException(400, "Registration code is required");
+        }
 
         const existingUser = await authRepository.findByEmail(email);
         if (existingUser) {
@@ -14,8 +19,18 @@ class AuthService {
             throw new HttpException(409, "Sorry, this email is already registered");
         }
 
-        const user = await authRepository.create({ username, email, password, role, access_lvl });
-        logger.info({ userId: user.id, email }, "User registered successfully");
+        const regCode = await authRepository.findRegistrationCode(registration_code);
+        if (!regCode) {
+            logger.warn({ code: registration_code }, "Registration failed - invalid code");
+            throw new HttpException(400, "Invalid or expired registration code");
+        }
+
+        const access_lvl = regCode.code_type === 'lvl1' ? 1 : regCode.code_type === 'lvl2' ? 2 : 3;
+
+        const user = await authRepository.create({ email, password, role: 'user', access_lvl });
+        await authRepository.incrementCodeUsage(regCode.id);
+
+        logger.info({ userId: user.id, email, access_lvl }, "User registered successfully");
 
         return this._generateTokens(user);
     }
@@ -44,9 +59,13 @@ class AuthService {
         return this._generateTokens(user, session.id);
     }
 
-    async logout(sessionId) {
+    async logout(sessionId, accessToken = null) {
         if (!sessionId) {
             throw new HttpException(400, "Session ID required");
+        }
+
+        if (accessToken) {
+            addToBlacklist(accessToken);
         }
 
         const session = await sessionRepository.end(sessionId);
@@ -110,7 +129,6 @@ class AuthService {
         return {
             user: {
                 id: user.id,
-                username: user.username,
                 email: user.email,
                 role: user.role,
                 access_lvl: user.access_lvl

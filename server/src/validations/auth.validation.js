@@ -1,35 +1,29 @@
 import Joi from "joi";
 
 export const registerSchema = Joi.object({
-    username: Joi.string()
-        .min(3)
-        .max(30)
-        .pattern(/^[a-zA-Z0-9_]+$/)
-        .messages({
-            "string.empty": "Username is required",
-            "string.min": "Username must be at least 3 characters",
-            "string.max": "Username must be at most 30 characters",
-            "string.pattern.base": "Username can only contain letters, numbers and underscores"
-        }),
     email: Joi.string()
         .email()
+        .required()
         .messages({
             "string.empty": "Email is required",
-            "string.email": "Please provide a valid email address"
+            "string.email": "Please provide a valid email address",
+            "any.required": "Email is required"
         }),
     password: Joi.string()
         .min(6)
         .max(50)
+        .required()
         .messages({
             "string.empty": "Password is required",
             "string.min": "Password must be at least 6 characters",
-            "string.max": "Password must be at most 50 characters"
+            "string.max": "Password must be at most 50 characters",
+            "any.required": "Password is required"
         }),
-    role: Joi.string()
-        .valid("user", "admin")
-        .default("user")
+    registration_code: Joi.string()
+        .required()
         .messages({
-            "any.only": "Role must be either user or admin"
+            "string.empty": "Registration code is required",
+            "any.required": "Registration code is required"
         })
 }).messages({
     "object.unknown": "Unknown field provided"
