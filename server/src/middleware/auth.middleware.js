@@ -15,6 +15,12 @@ export default function authMiddleware(req, res, next) {
         return next(new HttpException(401, "Sorry, invalid or expired access token"));
     }
 
-    req.user = decoded;
+    req.user = {
+        id: decoded.id,
+        email: decoded.email,
+        role: decoded.role,
+        access_lvl: decoded.access_lvl || 1,
+        session_id: decoded.session_id || null
+    };
     next();
 }

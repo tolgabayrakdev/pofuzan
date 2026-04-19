@@ -13,7 +13,7 @@ class AuthRepository {
 
     async findById(id) {
         const result = await pool.query(
-            "SELECT id, username, email, role, created_at FROM users WHERE id = $1",
+            "SELECT id, username, email, role, access_lvl, created_at FROM users WHERE id = $1",
             [id]
         );
         return result.rows[0];

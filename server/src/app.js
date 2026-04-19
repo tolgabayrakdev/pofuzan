@@ -10,6 +10,7 @@ dotenv.config({ path: path.resolve(envFile) });
 
 import errorHandler from "./middleware/error-handler.js";
 import authRoutes from "./routes/auth.routes.js";
+import personsRoutes from "./routes/persons.routes.js";
 
 const app = express();
 const port = process.env.APP_PORT || 8080;
@@ -23,6 +24,7 @@ app.use(helmet());
 app.use(morgan("common"));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/persons", personsRoutes);
 
 app.get("/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });

@@ -5,6 +5,7 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'user')),
+    access_lvl INTEGER DEFAULT 1 CHECK (access_lvl IN (1, 2, 3)),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -14,6 +15,7 @@ CREATE TABLE persons (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
+    view_level INTEGER DEFAULT 1 CHECK (view_level IN (1, 2, 3)),
     created_by INTEGER REFERENCES users(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -215,9 +217,27 @@ CREATE INDEX idx_person_notes_person ON person_notes(person_id);
 CREATE INDEX idx_search_logs_user ON search_logs(user_id);
 CREATE INDEX idx_search_logs_date ON search_logs(searched_at DESC);
 
+-- Sessions Table
+CREATE TABLE sessions (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    device_info VARCHAR(255),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ended_at TIMESTAMP,
+    duration_minutes INTEGER,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- Indexes
+CREATE INDEX idx_sessions_user ON sessions(user_id);
+CREATE INDEX idx_sessions_started ON sessions(started_at DESC);
+CREATE INDEX idx_sessions_active ON sessions(is_active);
+
 -- Seed Data (Test Users)
--- Admin: admin@pofuzan.com / admin123
--- User: user@pofuzan.com / user123
-INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'admin'),
-('user', 'user@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'user');
+-- Admin: admin@pofuzan.com / admin123 (lvl3)
+-- User: user@pofuzan.com / user123 (lvl1)
+INSERT INTO users (username, email, password, role, access_lvl) VALUES
+('admin', 'admin@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'admin', 3),
+('user', 'user@pofuzan.com', '$2b$10$rQZ9Qf1x5M5V8H3K5L6N7O.hash.fake.hash.for.development', 'user', 1);
