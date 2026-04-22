@@ -3,16 +3,38 @@ import { withTransaction } from '../util/database.js';
 
 class SessionRepository {
   async create(sessionData) {
-    const { user_id, ip_address, user_agent, device_info } = sessionData;
+    const { user_id, refresh_token_hash, ip_address, user_agent, device_info } =
+      sessionData;
 
     return await withTransaction(async (client) => {
       const result = await client.query(
-        `INSERT INTO sessions (user_id, ip_address, user_agent, device_info)
-                 VALUES ($1, $2, $3, $4) RETURNING *`,
-        [user_id, ip_address, user_agent, device_info]
+        `INSERT INTO sessions (user_id, refresh_token_hash, ip_address, user_agent, device_info)
+                 VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [user_id, refresh_token_hash, ip_address, user_agent, device_info]
       );
       return result.rows[0];
     });
+  }
+
+  async findById(id) {
+    const result = await pool.query('SELECT * FROM sessions WHERE id = $1', [id]);
+    return result.rows[0];
+  }
+
+  async updateRefreshTokenHash(id, newHash) {
+    const result = await pool.query(
+      `UPDATE sessions SET refresh_token_hash = $2 WHERE id = $1 RETURNING *`,
+      [id, newHash]
+    );
+    return result.rows[0];
+  }
+
+  async clearRefreshTokenHash(id) {
+    const result = await pool.query(
+      `UPDATE sessions SET refresh_token_hash = NULL WHERE id = $1 RETURNING *`,
+      [id]
+    );
+    return result.rows[0];
   }
 
   async end(id) {

@@ -232,6 +232,7 @@ CREATE INDEX idx_search_logs_date ON search_logs(searched_at DESC);
 CREATE TABLE sessions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
+    refresh_token_hash VARCHAR(64),
     ip_address VARCHAR(45),
     user_agent TEXT,
     device_info VARCHAR(255),

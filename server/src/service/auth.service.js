@@ -6,6 +6,7 @@ import {
   verifyRefreshToken,
   decodeToken,
 } from '../util/jwt.js';
+import { hashToken, verifyTokenHash } from '../util/hash.js';
 import { addToBlacklist } from '../util/token-blacklist.js';
 import HttpException from '../exceptions/http-exception.js';
 import logger from '../util/logger.js';
@@ -69,8 +70,12 @@ class AuthService {
       throw new HttpException(401, 'Sorry, incorrect password');
     }
 
+    const tokens = this._generateTokens(user);
+    const refreshTokenHash = hashToken(tokens.refreshToken);
+
     const session = await sessionRepository.create({
       user_id: user.id,
+      refresh_token_hash: refreshTokenHash,
       ip_address: sessionData.ip_address,
       user_agent: sessionData.user_agent,
       device_info: sessionData.device_info,
@@ -80,7 +85,7 @@ class AuthService {
       { userId: user.id, sessionId: session.id, ip: sessionData.ip_address },
       'User logged in successfully'
     );
-    return this._generateTokens(user, session.id);
+    return tokens;
   }
 
   async logout(sessionId, accessToken = null) {
@@ -92,6 +97,7 @@ class AuthService {
       addToBlacklist(accessToken);
     }
 
+    await sessionRepository.clearRefreshTokenHash(sessionId);
     const session = await sessionRepository.end(sessionId);
     logger.info({ sessionId }, 'User logged out successfully');
     return { message: 'Logged out successfully', session };
@@ -113,8 +119,35 @@ class AuthService {
       throw new HttpException(404, 'Sorry, user not found');
     }
 
-    logger.info({ userId: user.id }, 'Token refreshed successfully');
-    return this._generateTokens(user, decoded.session_id);
+    const session = await sessionRepository.findById(decoded.session_id);
+    if (!session || !session.is_active) {
+      logger.warn(
+        { sessionId: decoded.session_id },
+        'Refresh token failed - session not found or inactive'
+      );
+      throw new HttpException(401, 'Session not found or expired');
+    }
+
+    const tokenHash = hashToken(refreshToken);
+    if (!verifyTokenHash(refreshToken, session.refresh_token_hash)) {
+      logger.warn(
+        { sessionId: decoded.session_id },
+        'Refresh token failed - hash mismatch'
+      );
+      throw new HttpException(401, 'Invalid refresh token');
+    }
+
+    const newTokens = this._generateTokens(user);
+    await sessionRepository.updateRefreshTokenHash(
+      session.id,
+      hashToken(newTokens.refreshToken)
+    );
+
+    logger.info(
+      { userId: user.id, sessionId: session.id },
+      'Token refreshed successfully'
+    );
+    return newTokens;
   }
 
   async getProfile(userId) {
