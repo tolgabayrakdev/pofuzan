@@ -1,27 +1,39 @@
 import { useState } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { register } from "@/lib/auth"
+import { toast } from "sonner"
 
 export default function SignUp() {
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    registration_code: "",
   })
 
   async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
+      toast.error("Şifreler eşleşmiyor")
       return
     }
     setIsLoading(true)
-    setTimeout(() => setIsLoading(false), 1000)
+    try {
+      await register(formData.email, formData.password, formData.registration_code)
+      toast.success("Kayıt başarılı")
+      navigate("/app")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Kayıt başarısız")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +48,7 @@ export default function SignUp() {
     if (/[A-Z]/.test(password)) strength++
     if (/[0-9]/.test(password)) strength++
     if (/[^A-Za-z0-9]/.test(password)) strength++
-    
+
     const labels = ["", "Zayıf", "Düşük", "Orta", "Güçlü"]
     const colors = ["", "bg-destructive", "bg-orange-500", "bg-yellow-500", "bg-green-500"]
     return { level: strength, label: labels[strength], color: colors[strength] }
@@ -47,7 +59,7 @@ export default function SignUp() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_40%,transparent_100%)]" />
-      
+
       <div className="relative w-full max-w-sm space-y-6">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 border border-border rounded-none text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -64,17 +76,17 @@ export default function SignUp() {
           <CardContent className="pt-6">
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="username" className="uppercase text-[10px] tracking-wider">
-                  Kullanıcı Adı
+                <Label htmlFor="registration_code" className="uppercase text-[10px] tracking-wider">
+                  Kayıt Kodu
                 </Label>
                 <Input
-                  id="username"
-                  name="username"
+                  id="registration_code"
+                  name="registration_code"
                   type="text"
-                  placeholder="agent_name"
-                  value={formData.username}
+                  placeholder="LVL1-2024"
+                  value={formData.registration_code}
                   onChange={handleChange}
-                  autoComplete="username"
+                  autoComplete="off"
                   required
                   disabled={isLoading}
                 />

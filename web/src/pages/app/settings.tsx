@@ -1,5 +1,4 @@
 import { useState } from "react"
-import AppLayout from "@/components/layout/app-layout"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,8 +16,7 @@ export default function Settings() {
   }
 
   return (
-    <AppLayout>
-      <div className="p-4 md:p-6 pb-20 md:pb-6 space-y-6 max-w-2xl">
+    <div className="p-4 md:p-6 pb-20 md:pb-6 space-y-6 max-w-2xl">
         <div>
           <h1 className="text-lg font-heading tracking-tight">Ayarlar</h1>
           <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
@@ -238,6 +236,5 @@ export default function Settings() {
           </Button>
         </div>
       </div>
-    </AppLayout>
   )
 }

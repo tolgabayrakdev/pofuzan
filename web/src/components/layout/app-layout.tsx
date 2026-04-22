@@ -1,10 +1,21 @@
-import { Link, useLocation } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
 import { cn } from "@/lib/utils"
+import { logout, getUser } from "@/lib/auth"
 
 interface NavItem {
   label: string
   href: string
   icon: React.ReactNode
+}
+
+interface AppLayoutProps {
+  children: React.ReactNode
+  user?: {
+    id: number
+    email: string
+    role: string
+    access_lvl: number
+  }
 }
 
 const navItems: NavItem[] = [
@@ -51,8 +62,20 @@ const navItems: NavItem[] = [
   },
 ]
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({ children, user }: AppLayoutProps) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const currentUser = user || getUser()
+
+  const handleLogout = async () => {
+    await logout()
+    navigate("/sign-in")
+  }
+
+  const getLevelLabel = (level: number) => {
+    const labels = { 1: "LEVEL-1", 2: "LEVEL-2", 3: "LEVEL-3" }
+    return labels[level as keyof typeof labels] || "LEVEL-1"
+  }
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -90,8 +113,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="p-3 border-t border-border">
           <div className="px-3 py-2 text-[10px]">
             <p className="text-muted-foreground uppercase tracking-wider">Acenta</p>
-            <p className="font-medium mt-0.5">admin</p>
-            <p className="text-muted-foreground text-[9px] mt-0.5">LEVEL-1 ACCESS</p>
+            <p className="font-medium mt-0.5">{currentUser?.email || "Unknown"}</p>
+            <p className="text-muted-foreground text-[9px] mt-0.5">{getLevelLabel(currentUser?.access_lvl || 1)} ACCESS</p>
           </div>
         </div>
       </aside>
@@ -104,12 +127,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
             <span className="text-xs font-heading tracking-tight">POFUZAN</span>
           </Link>
-          <Link
-            to="/sign-in"
+          <button
+            onClick={handleLogout}
             className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
           >
             Çıkış
-          </Link>
+          </button>
         </header>
 
         <header className="hidden md:flex items-center justify-between px-6 py-3 border-b border-border bg-card">
@@ -127,12 +150,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <span className="w-1.5 h-1.5 bg-green-500 animate-pulse" />
               <span className="uppercase tracking-wider">Aktif</span>
             </div>
-            <Link
-              to="/sign-in"
+<button
+              onClick={handleLogout}
               className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
             >
               Çıkış
-            </Link>
+            </button>
           </div>
         </header>
 

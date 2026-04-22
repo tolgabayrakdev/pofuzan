@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import AppLayout from "@/components/layout/app-layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -167,8 +166,7 @@ export default function NewPerson() {
   }
 
   return (
-    <AppLayout>
-      <form onSubmit={handleSubmit} className="p-4 md:p-6 pb-24 md:pb-6 space-y-4">
+    <form onSubmit={handleSubmit} className="p-4 md:p-6 pb-24 md:pb-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-lg font-heading tracking-tight">Yeni Kayıt</h1>
@@ -745,6 +743,5 @@ export default function NewPerson() {
           </CardContent>
         </Card>
       </form>
-    </AppLayout>
   )
 }

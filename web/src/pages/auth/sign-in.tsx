@@ -1,18 +1,30 @@
 import { useState } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { login } from "@/lib/auth"
+import { toast } from "sonner"
 
 export default function SignIn() {
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({ email: "", password: "" })
 
   async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault()
     setIsLoading(true)
-    setTimeout(() => setIsLoading(false), 1000)
+    try {
+      await login(formData.email, formData.password)
+      toast.success("Giriş başarılı")
+      navigate("/app")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Giriş başarısız")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -45,6 +57,8 @@ export default function SignIn() {
                   autoComplete="email"
                   required
                   disabled={isLoading}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
 
@@ -60,6 +74,8 @@ export default function SignIn() {
                     autoComplete="current-password"
                     required
                     disabled={isLoading}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   />
                   <button
                     type="button"

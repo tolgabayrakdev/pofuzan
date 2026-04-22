@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Link } from "react-router"
-import AppLayout from "@/components/layout/app-layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
@@ -40,12 +39,6 @@ const riskLabels: Record<string, { label: string; color: string; bg: string }> =
   Kritik: { label: "Kritik", color: "text-destructive", bg: "bg-destructive/10" },
 }
 
-const statusLabels: Record<string, { label: string; color: string }> = {
-  Aktif: { label: "Aktif", color: "text-green-500" },
-  Gizli: { label: "Gizli", color: "text-amber-500" },
-  Arsiv: { label: "Arşiv", color: "text-muted-foreground" },
-}
-
 const filters = [
   { value: "all", label: "Tümü" },
   { value: "Aktif", label: "Aktif" },
@@ -67,9 +60,8 @@ export default function Records() {
   })
 
   return (
-    <AppLayout>
-      <div className="p-4 md:p-6 pb-20 md:pb-6 space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div className="p-4 md:p-6 pb-20 md:pb-6 space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <h1 className="text-lg font-heading tracking-tight">Kayıtlar</h1>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
@@ -232,7 +224,6 @@ export default function Records() {
             </p>
           </div>
         )}
-      </div>
-    </AppLayout>
+    </div>
   )
 }
