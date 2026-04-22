@@ -1,73 +1,73 @@
 /* eslint-disable react-refresh/only-export-components */
-import { StrictMode, useEffect, useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { createBrowserRouter, Navigate } from 'react-router'
-import { RouterProvider } from 'react-router'
-import { Toaster } from 'sonner'
-import { ThemeProvider } from '@/components/theme/theme-provider'
+import { StrictMode, useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import { createBrowserRouter, Navigate } from 'react-router';
+import { RouterProvider } from 'react-router';
+import { Toaster } from 'sonner';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 
-import SignIn from '@/pages/auth/sign-in'
-import SignUp from '@/pages/auth/sign-up'
-import Privacy from '@/pages/privacy'
-import Dashboard from '@/pages/app/index'
-import Records from '@/pages/app/records'
-import NewPerson from '@/pages/app/person/new'
-import Settings from '@/pages/app/settings'
-import AppLayout from '@/components/layout/app-layout'
-import { isAuthenticated, refresh } from '@/lib/auth'
+import SignIn from '@/pages/auth/sign-in';
+import SignUp from '@/pages/auth/sign-up';
+import Privacy from '@/pages/privacy';
+import Dashboard from '@/pages/app/index';
+import Records from '@/pages/app/records';
+import NewPerson from '@/pages/app/person/new';
+import Settings from '@/pages/app/settings';
+import AppLayout from '@/components/layout/app-layout';
+import { isAuthenticated, refresh } from '@/lib/auth';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    refresh().finally(() => setLoading(false))
-  }, [])
+    refresh().finally(() => setLoading(false));
+  }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-4 h-4 border border-foreground/20 border-t-foreground rounded-full animate-spin" />
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated()) {
-    return <Navigate to="/sign-in" replace />
+    return <Navigate to="/sign-in" replace />;
   }
 
-  return <AppLayout>{children}</AppLayout>
+  return <AppLayout>{children}</AppLayout>;
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    refresh().finally(() => setLoading(false))
-  }, [])
+    refresh().finally(() => setLoading(false));
+  }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-4 h-4 border border-foreground/20 border-t-foreground rounded-full animate-spin" />
       </div>
-    )
+    );
   }
 
   if (isAuthenticated()) {
-    return <Navigate to="/app" replace />
+    return <Navigate to="/app" replace />;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Navigate to="/sign-in" replace />,
   },
   {
-    path: "/sign-in",
+    path: '/sign-in',
     element: (
       <PublicRoute>
         <SignIn />
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/sign-up",
+    path: '/sign-up',
     element: (
       <PublicRoute>
         <SignUp />
@@ -83,11 +83,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/privacy",
+    path: '/privacy',
     element: <Privacy />,
   },
   {
-    path: "/app",
+    path: '/app',
     element: (
       <ProtectedRoute>
         <Dashboard />
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/app/records",
+    path: '/app/records',
     element: (
       <ProtectedRoute>
         <Records />
@@ -103,7 +103,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/app/person/new",
+    path: '/app/person/new',
     element: (
       <ProtectedRoute>
         <NewPerson />
@@ -111,7 +111,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/app/person/:id",
+    path: '/app/person/:id',
     element: (
       <ProtectedRoute>
         <NewPerson />
@@ -119,14 +119,14 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/app/settings",
+    path: '/app/settings',
     element: (
       <ProtectedRoute>
         <Settings />
       </ProtectedRoute>
     ),
   },
-])
+]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -134,5 +134,5 @@ createRoot(document.getElementById('root')!).render(
       <Toaster />
       <RouterProvider router={router} />
     </ThemeProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

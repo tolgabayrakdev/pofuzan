@@ -1,29 +1,29 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { login } from "@/lib/auth"
-import { toast } from "sonner"
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { login } from '@/lib/auth';
+import { toast } from 'sonner';
 
 export default function SignIn() {
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({ email: "", password: "" })
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '' });
 
   async function onSubmit(e: React.SubmitEvent) {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
     try {
-      await login(formData.email, formData.password)
-      toast.success("Giriş başarılı")
-      navigate("/app")
+      await login(formData.email, formData.password);
+      toast.success('Giriş başarılı');
+      navigate('/app');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Giriş başarısız")
+      toast.error(error instanceof Error ? error.message : 'Giriş başarısız');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -47,7 +47,10 @@ export default function SignIn() {
           <CardContent className="pt-6">
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="email"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   E-posta
                 </Label>
                 <Input
@@ -58,31 +61,38 @@ export default function SignIn() {
                   required
                   disabled={isLoading}
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={e =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="password"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   Şifre
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     autoComplete="current-password"
                     required
                     disabled={isLoading}
                     value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={e =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wider"
                   >
-                    {showPassword ? "Gizle" : "Göster"}
+                    {showPassword ? 'Gizle' : 'Göster'}
                   </button>
                 </div>
               </div>
@@ -93,7 +103,9 @@ export default function SignIn() {
                     type="checkbox"
                     className="w-3 h-3 border border-input bg-transparent"
                   />
-                  <span className="text-muted-foreground uppercase tracking-wider">Oturum Açık Kalsın</span>
+                  <span className="text-muted-foreground uppercase tracking-wider">
+                    Oturum Açık Kalsın
+                  </span>
                 </label>
                 <Link
                   to="/forgot-password"
@@ -103,14 +115,19 @@ export default function SignIn() {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <span className="w-3 h-3 border border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                     Doğrulanıyor...
                   </span>
                 ) : (
-                  "Giriş Yap"
+                  'Giriş Yap'
                 )}
               </Button>
             </form>
@@ -119,7 +136,7 @@ export default function SignIn() {
 
         <div className="text-center">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-            Hesabın yok mu?{" "}
+            Hesabın yok mu?{' '}
           </span>
           <Link
             to="/sign-up"
@@ -134,5 +151,5 @@ export default function SignIn() {
         </div>
       </div>
     </div>
-  )
+  );
 }

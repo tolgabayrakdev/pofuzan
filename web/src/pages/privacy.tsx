@@ -1,4 +1,4 @@
-import { Link } from "react-router"
+import { Link } from 'react-router';
 
 export default function Privacy() {
   return (
@@ -6,7 +6,9 @@ export default function Privacy() {
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-heading tracking-tight">Gizlilik Sözleşmesi</h1>
+            <h1 className="text-lg font-heading tracking-tight">
+              Gizlilik Sözleşmesi
+            </h1>
             <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
               Kişisel verilerin işlenmesi
             </p>
@@ -29,9 +31,9 @@ export default function Privacy() {
               1. Veri Sorumlusu
             </h2>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Bu sistem ("POFUZAN") veri sorumlusu sıfatıyla, kişisel verilerinizi 6698 sayılı
-              Kişisel Verilerin Korunması Kanunu ("KVKK") ve ilgili mevzuat çerçevesinde
-              işlemektedir.
+              Bu sistem ("POFUZAN") veri sorumlusu sıfatıyla, kişisel
+              verilerinizi 6698 sayılı Kişisel Verilerin Korunması Kanunu
+              ("KVKK") ve ilgili mevzuat çerçevesinde işlemektedir.
             </p>
 
             <h2 className="text-sm font-medium uppercase tracking-wider mt-6 mb-2">
@@ -53,27 +55,29 @@ export default function Privacy() {
               3. Verilerin İşlenme Amacı
             </h2>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Kişisel verileriniz yalnızca aşağıdaki amaçlarla işlenir: sistem güvenliği,
-              kullanıcı kimlik doğrulama, kayıt yönetimi, denetim ve yasal yükümlülüklerin
-              yerine getirilmesi. Veriler üçüncü taraflarla paylaşılmaz.
+              Kişisel verileriniz yalnızca aşağıdaki amaçlarla işlenir: sistem
+              güvenliği, kullanıcı kimlik doğrulama, kayıt yönetimi, denetim ve
+              yasal yükümlülüklerin yerine getirilmesi. Veriler üçüncü
+              taraflarla paylaşılmaz.
             </p>
 
             <h2 className="text-sm font-medium uppercase tracking-wider mt-6 mb-2">
               4. Verilerin Saklanma Süresi
             </h2>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Tüm işlem kayıtları süresiz olarak saklanır. Kişisel veriler, ilgili mevzuatta öngörülen
-              saklama süreleri boyunca muhafaza edilir. Silme talepleri KVKK madde 7 kapsamında
-              değerlendirilir.
+              Tüm işlem kayıtları süresiz olarak saklanır. Kişisel veriler,
+              ilgili mevzuatta öngörülen saklama süreleri boyunca muhafaza
+              edilir. Silme talepleri KVKK madde 7 kapsamında değerlendirilir.
             </p>
 
             <h2 className="text-sm font-medium uppercase tracking-wider mt-6 mb-2">
               5. Güvenlik Önlemleri
             </h2>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Veriler, endüstri standardı şifreleme algoritmaları ile korunmaktadır. Yetkisiz
-              erişim girişimleri sistem tarafından loglanır ve engellenir. Veritabanı
-              bağlantıları şifrelenmiş kanal üzerinden gerçekleştirilir.
+              Veriler, endüstri standardı şifreleme algoritmaları ile
+              korunmaktadır. Yetkisiz erişim girişimleri sistem tarafından
+              loglanır ve engellenir. Veritabanı bağlantıları şifrelenmiş kanal
+              üzerinden gerçekleştirilir.
             </p>
 
             <h2 className="text-sm font-medium uppercase tracking-wider mt-6 mb-2">
@@ -94,8 +98,9 @@ export default function Privacy() {
               7. İletişim
             </h2>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              Gizlilik politikamız hakkında sorularınız için sistem yöneticisi ile iletişime
-              geçebilirsiniz. Başvurularınız 30 gün içinde değerlendirilir.
+              Gizlilik politikamız hakkında sorularınız için sistem yöneticisi
+              ile iletişime geçebilirsiniz. Başvurularınız 30 gün içinde
+              değerlendirilir.
             </p>
           </div>
         </div>
@@ -114,5 +119,5 @@ export default function Privacy() {
         </div>
       </div>
     </div>
-  )
+  );
 }

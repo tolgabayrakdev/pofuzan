@@ -1,60 +1,74 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { register } from "@/lib/auth"
-import { toast } from "sonner"
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { register } from '@/lib/auth';
+import { toast } from 'sonner';
 
 export default function SignUp() {
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    registration_code: "",
-  })
+    email: '',
+    password: '',
+    confirmPassword: '',
+    registration_code: '',
+  });
 
   async function onSubmit(e: React.SubmitEvent) {
-    e.preventDefault()
+    e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Şifreler eşleşmiyor")
-      return
+      toast.error('Şifreler eşleşmiyor');
+      return;
     }
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await register(formData.email, formData.password, formData.registration_code)
-      toast.success("Kayıt başarılı")
-      navigate("/app")
+      await register(
+        formData.email,
+        formData.password,
+        formData.registration_code
+      );
+      toast.success('Kayıt başarılı');
+      navigate('/app');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Kayıt başarısız")
+      toast.error(error instanceof Error ? error.message : 'Kayıt başarısız');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const getPasswordStrength = () => {
-    const { password } = formData
-    if (!password) return { level: 0, label: "" }
-    let strength = 0
-    if (password.length >= 8) strength++
-    if (/[A-Z]/.test(password)) strength++
-    if (/[0-9]/.test(password)) strength++
-    if (/[^A-Za-z0-9]/.test(password)) strength++
+    const { password } = formData;
+    if (!password) return { level: 0, label: '' };
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-    const labels = ["", "Zayıf", "Düşük", "Orta", "Güçlü"]
-    const colors = ["", "bg-destructive", "bg-orange-500", "bg-yellow-500", "bg-green-500"]
-    return { level: strength, label: labels[strength], color: colors[strength] }
-  }
+    const labels = ['', 'Zayıf', 'Düşük', 'Orta', 'Güçlü'];
+    const colors = [
+      '',
+      'bg-destructive',
+      'bg-orange-500',
+      'bg-yellow-500',
+      'bg-green-500',
+    ];
+    return {
+      level: strength,
+      label: labels[strength],
+      color: colors[strength],
+    };
+  };
 
-  const strength = getPasswordStrength()
+  const strength = getPasswordStrength();
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -76,7 +90,10 @@ export default function SignUp() {
           <CardContent className="pt-6">
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="registration_code" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="registration_code"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   Kayıt Kodu
                 </Label>
                 <Input
@@ -93,7 +110,10 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="email"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   E-posta
                 </Label>
                 <Input
@@ -110,14 +130,17 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="password" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="password"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   Şifre
                 </Label>
                 <div className="relative">
                   <Input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handleChange}
@@ -130,17 +153,17 @@ export default function SignUp() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground hover:text-foreground uppercase tracking-wider"
                   >
-                    {showPassword ? "Gizle" : "Göster"}
+                    {showPassword ? 'Gizle' : 'Göster'}
                   </button>
                 </div>
                 {formData.password && (
                   <div className="space-y-1">
                     <div className="flex gap-0.5">
-                      {[1, 2, 3, 4].map((i) => (
+                      {[1, 2, 3, 4].map(i => (
                         <div
                           key={i}
                           className={`h-0.5 flex-1 ${
-                            i <= strength.level ? strength.color : "bg-input"
+                            i <= strength.level ? strength.color : 'bg-input'
                           }`}
                         />
                       ))}
@@ -153,7 +176,10 @@ export default function SignUp() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="uppercase text-[10px] tracking-wider">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="uppercase text-[10px] tracking-wider"
+                >
                   Şifre Tekrar
                 </Label>
                 <Input
@@ -167,16 +193,18 @@ export default function SignUp() {
                   required
                   disabled={isLoading}
                   className={
-                    formData.confirmPassword && formData.password !== formData.confirmPassword
-                      ? "border-destructive focus-visible:border-destructive"
-                      : ""
+                    formData.confirmPassword &&
+                    formData.password !== formData.confirmPassword
+                      ? 'border-destructive focus-visible:border-destructive'
+                      : ''
                   }
                 />
-                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                  <p className="text-[9px] text-destructive uppercase tracking-wider">
-                    Şifreler eşleşmiyor
-                  </p>
-                )}
+                {formData.confirmPassword &&
+                  formData.password !== formData.confirmPassword && (
+                    <p className="text-[9px] text-destructive uppercase tracking-wider">
+                      Şifreler eşleşmiyor
+                    </p>
+                  )}
               </div>
 
               <div className="flex items-start gap-2 text-[10px]">
@@ -186,22 +214,35 @@ export default function SignUp() {
                   className="mt-0.5 w-3 h-3 border border-input bg-transparent"
                   required
                 />
-                <label htmlFor="terms" className="text-muted-foreground leading-relaxed">
-                  <span className="uppercase tracking-wider">Gizlilik sözleşmesini</span>{" "}
-                  <Link to="/privacy" className="hover:text-foreground underline">
+                <label
+                  htmlFor="terms"
+                  className="text-muted-foreground leading-relaxed"
+                >
+                  <span className="uppercase tracking-wider">
+                    Gizlilik sözleşmesini
+                  </span>{' '}
+                  <Link
+                    to="/privacy"
+                    className="hover:text-foreground underline"
+                  >
                     okudum ve kabul ediyorum
                   </Link>
                 </label>
               </div>
 
-              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <span className="w-3 h-3 border border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                     Kaydediliyor...
                   </span>
                 ) : (
-                  "Kayıt Ol"
+                  'Kayıt Ol'
                 )}
               </Button>
             </form>
@@ -210,7 +251,7 @@ export default function SignUp() {
 
         <div className="text-center">
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-            Zaten hesabın var mı?{" "}
+            Zaten hesabın var mı?{' '}
           </span>
           <Link
             to="/sign-in"
@@ -225,5 +266,5 @@ export default function SignUp() {
         </div>
       </div>
     </div>
-  )
+  );
 }
