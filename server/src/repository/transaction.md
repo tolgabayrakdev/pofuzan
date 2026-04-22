@@ -7,7 +7,7 @@ Veritabanı işlemlerinde tutarlılık ve güvenlik için `withTransaction` help
 ## Import
 
 ```javascript
-import { withTransaction } from "../util/database.js";
+import { withTransaction } from '../util/database.js';
 ```
 
 ## Kullanım
@@ -112,10 +112,10 @@ async search(filters) {
 
 ## Özet
 
-| İşlem Türü | Transaction Gerekli |
-|------------|-------------------|
-| SELECT (okuma) | Hayır |
-| INSERT | Evet |
-| UPDATE | Evet |
-| DELETE | Evet |
-| Çoklu tablo işlemi | Evet |
+| İşlem Türü         | Transaction Gerekli |
+| ------------------ | ------------------- |
+| SELECT (okuma)     | Hayır               |
+| INSERT             | Evet                |
+| UPDATE             | Evet                |
+| DELETE             | Evet                |
+| Çoklu tablo işlemi | Evet                |
